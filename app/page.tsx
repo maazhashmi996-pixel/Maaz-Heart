@@ -156,7 +156,7 @@ export default function PremiumVipHeart() {
               transition={{ delay: 0.8, duration: 1 }}
               className="text-xs md:text-sm text-pink-300/80 uppercase font-medium"
             >
-              Creating For You
+              Created For You
             </motion.p>
           </motion.div>
         )}
