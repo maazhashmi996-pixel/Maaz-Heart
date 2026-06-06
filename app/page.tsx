@@ -8,7 +8,7 @@ import * as THREE from 'three';
 function FloatingStars({ setSceneStage }: { setSceneStage: (stage: number) => void }) {
   const pointsRef = useRef<THREE.Points>(null!);
   const geometryRef = useRef<THREE.BufferGeometry>(null!);
-  const count = 4000; // Premium Particle Density
+  const count = 4500; // Particle density barha di taake bare heart me gaps na dikhein
 
   // Define Spawn (offscreen) and Destination (Heart) Positions
   const [targetPositions, finalPositions] = useMemo(() => {
@@ -18,25 +18,25 @@ function FloatingStars({ setSceneStage }: { setSceneStage: (stage: number) => vo
     for (let i = 0; i < count; i++) {
       // Stars fly in from deep space tunnel
       const startAngle = Math.random() * Math.PI * 2;
-      const startRadius = 30 + Math.random() * 20;
+      const startRadius = 40 + Math.random() * 20;
       start[i * 3] = startRadius * Math.sin(startAngle);
       start[i * 3 + 1] = startRadius * Math.cos(startAngle);
-      start[i * 3 + 2] = -40 - Math.random() * 30;
+      start[i * 3 + 2] = -50 - Math.random() * 30;
 
       // 3D Parametric Heart Formula Destination
       const t = Math.PI * 2 * (i / count);
       const x = 16 * Math.pow(Math.sin(t), 3);
       const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
-      const z = (Math.random() - 0.5) * 6 * Math.sin(t);
+      const z = (Math.random() - 0.5) * 7 * Math.sin(t); // Deep 3D core
 
-      end[i * 3] = x * 0.23;
-      end[i * 3 + 1] = y * 0.23;
-      end[i * 3 + 2] = z * 0.23;
+      // OUTCLASS UPGRADE: Scale multiplier 0.23 se barha kr 0.38 krdiya taake heart BARA bny
+      end[i * 3] = x * 0.38;
+      end[i * 3 + 1] = y * 0.38;
+      end[i * 3 + 2] = z * 0.38;
     }
     return [start, end];
   }, [count]);
 
-  // Create a Float32Array for current positions to mutate safely
   const currentPositions = useMemo(() => new Float32Array(targetPositions), [targetPositions]);
 
   // Hook direct insertion to avoid JSX primitive Red-lines permanently
@@ -52,7 +52,7 @@ function FloatingStars({ setSceneStage }: { setSceneStage: (stage: number) => vo
   // Sequence Timers
   useEffect(() => {
     const timer1 = setTimeout(() => setSceneStage(1), 3500); // Heart Formed
-    const timer2 = setTimeout(() => setSceneStage(2), 4800); // Text Reveals
+    const timer2 = setTimeout(() => setSceneStage(2), 4600); // Text Reveals perfectly inside
     return () => {
       clearTimeout(timer1);
       clearTimeout(timer2);
@@ -81,7 +81,6 @@ function FloatingStars({ setSceneStage }: { setSceneStage: (stage: number) => vo
       currentPositions[i * 3 + 2] = THREE.MathUtils.lerp(targetPositions[i * 3 + 2], finalPositions[i * 3 + 2], easeTravel);
     }
 
-    // Update raw positions buffer safely
     posAttribute.copyArray(currentPositions);
     posAttribute.needsUpdate = true;
 
@@ -91,6 +90,7 @@ function FloatingStars({ setSceneStage }: { setSceneStage: (stage: number) => vo
       pointsRef.current.rotation.y = settleTime * 0.45;
       pointsRef.current.rotation.x = Math.sin(settleTime * 0.2) * 0.12;
 
+      // Premium breathing/pulsing animation loop
       const pulse = 1 + Math.sin(settleTime * 2.2) * 0.03;
       pointsRef.current.scale.set(pulse, pulse, pulse);
     } else {
@@ -100,12 +100,11 @@ function FloatingStars({ setSceneStage }: { setSceneStage: (stage: number) => vo
 
   return (
     <points ref={pointsRef}>
-      {/* Native geometry link to satisfy TypeScript engine */}
       <bufferGeometry ref={geometryRef} />
       <pointsMaterial
         transparent
         color="#ff2a85"
-        size={0.16}
+        size={0.15} // Slightly balanced size for high-density big heart
         sizeAttenuation={true}
         depthWrite={false}
         blending={THREE.AdditiveBlending}
@@ -123,7 +122,7 @@ export default function PremiumVipHeart() {
     <div className="relative w-full h-screen bg-black overflow-hidden flex items-center justify-center font-sans select-none">
 
       {/* Glow Ambient Layer */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,42,133,0.1)_0%,transparent_80%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,42,133,0.12)_0%,transparent_75%)] pointer-events-none" />
 
       {/* Three.js Canvas Layer */}
       <div className="absolute inset-0 w-full h-full">
@@ -138,23 +137,24 @@ export default function PremiumVipHeart() {
         </Canvas>
       </div>
 
-      {/* Typography Overlay */}
-      <div className="relative z-10 text-center px-4 pointer-events-none">
+      {/* Typography Overlay (Centered Perfectly Inside the Heart) */}
+      {/* absolute flex items-center justify-center layout lagaya hai taake overlay absolute center ho */}
+      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-4 pointer-events-none">
         {sceneStage === 2 && (
           <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            className="space-y-4"
+            initial={{ opacity: 0, scale: 0.75, filter: "blur(10px)" }}
+            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-2 transform -y-2" // Halka sa offset upar kiya hai heart ke center coordinate match krne k liye
           >
-            <h1 className="text-5xl md:text-8xl font-black tracking-widest uppercase text-transparent bg-clip-text bg-gradient-to-r from-white via-pink-100 to-white drop-shadow-[0_0_40px_rgba(255,42,133,0.6)]">
+            <h1 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-widest uppercase text-transparent bg-clip-text bg-gradient-to-r from-white via-pink-100 to-white drop-shadow-[0_0_50px_rgba(255,42,133,0.75)]">
               I Love You Mahi
             </h1>
             <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.7 }}
-              transition={{ delay: 2.2, duration: 1 }}
-              className="text-sm md:text-base text-gray-400 tracking-[0.4em] uppercase"
+              initial={{ opacity: 0, letterSpacing: "0.2em" }}
+              animate={{ opacity: 0.8, letterSpacing: "0.5em" }}
+              transition={{ delay: 0.8, duration: 1 }}
+              className="text-xs md:text-sm text-pink-300/80 uppercase font-medium"
             >
               Creating For You
             </motion.p>
